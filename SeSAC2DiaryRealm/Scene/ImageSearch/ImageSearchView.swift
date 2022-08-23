@@ -8,31 +8,57 @@
 import UIKit
 
 class ImageSearchView: BaseView {
-     
-    let collectionView: UICollectionView = {
-        let view = UICollectionView(frame: .zero, collectionViewLayout: imageCollectionViewLayout())
+    
+    let searchBar: UISearchBar = {
+        let view = UISearchBar()
+        view.placeholder = "원하시는 사진의 키워드를 입력해주세요."
+       
         return view
     }()
-     
+    
+    let collectionView: UICollectionView = {
+        let itemCount: CGFloat = 3
+        print(#function)
+        
+        let layout = UICollectionViewFlowLayout()
+        let spacing: CGFloat = 9
+        let width = (UIScreen.main.bounds.width - (spacing * 4)) / itemCount
+        layout.itemSize = CGSize(width: width, height: width)
+        layout.scrollDirection = .vertical
+        layout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
+        layout.minimumLineSpacing = spacing
+        layout.minimumInteritemSpacing = spacing
+        
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        
+        return view
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func configureUI() {
-        self.addSubview(collectionView)
+        backgroundColor = .brown
+        [searchBar, collectionView].forEach { self.addSubview($0) }
     }
     
     override func setConstraints() {
-        collectionView.snp.makeConstraints { make in
-            make.edges.equalTo(self.safeAreaLayoutGuide)
+        
+        searchBar.snp.makeConstraints { make in
+            
+            make.top.leading.trailing.equalTo(self.safeAreaLayoutGuide).offset(0)
         }
-    }
-    
-    static func imageCollectionViewLayout() -> UICollectionViewFlowLayout {
-        let layout = UICollectionViewFlowLayout()
-        let deviceWidth: CGFloat = UIScreen.main.bounds.width
-        let itemWidth: CGFloat = deviceWidth / 2
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
-        layout.scrollDirection = .vertical
-        return layout
+        
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(searchBar.snp.bottom).offset(0)
+            make.leading.trailing.equalTo(self.safeAreaInsets).offset(0)
+            make.bottom.equalToSuperview().offset(0)
+        }
     }
 }
 

@@ -6,40 +6,26 @@
 //
 
 import UIKit
-import Kingfisher
+import SnapKit
 
-class ImageSearchCollectionViewCell: BaseCollectionViewCell {
+class CustomCollectionViewCell: BaseCollectionViewCell {
     
-    let searchImageView: UIImageView = {
-        let view = UIImageView()
-        view.contentMode = .scaleAspectFill
-        view.clipsToBounds = true
-        view.backgroundColor = Constants.BaseColor.background
-        return view
-    }()
+    let imageView: CustomImageView = {
+        let view = CustomImageView(frame: .zero)
         
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        configure()
-        setConstraints()
-    }
+      return view
+    }()
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func configureUI() {
+        self.addSubview(imageView)
+        
     }
-    
-    override func configure() {
-        self.addSubview(searchImageView)
-    }
-    
+
     override func setConstraints() {
-        searchImageView.snp.makeConstraints { make in
-            make.edges.equalTo(self)
+        
+        imageView.snp.makeConstraints { make in
+            make.top.leading.trailing.bottom.equalTo(self)
+           
         }
-    }
-    
-    func setImage(data: String) {
-        let url = URL(string: data)
-        searchImageView.kf.setImage(with: url)
     }
 }

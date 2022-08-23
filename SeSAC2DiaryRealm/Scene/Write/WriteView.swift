@@ -17,12 +17,14 @@ class WriteView: BaseView {
     let titleTextField: WriteTextField = {
         let view = WriteTextField()
         view.placeholder = "제목을 입력해주세요"
+        view.textColor = .white
         return view
     }()
     
     let dateTextField: WriteTextField = {
         let view = WriteTextField()
         view.placeholder = "날짜를 입력해주세요"
+        view.textColor = .white
         return view
     }()
     
