@@ -15,7 +15,7 @@ class HomeViewController: BaseViewController {
     
     lazy var tableView: UITableView = { //초기화 이후에 실행될 수 있다는 lazy 이렇게 옮기는게 답은 아님
         let view = UITableView()
-        view.rowHeight = 100
+        view.rowHeight = 60
         view.delegate = self
         view.dataSource = self
         view.register(HomeTableViewCell.self, forCellReuseIdentifier: "cell")
@@ -31,8 +31,7 @@ class HomeViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.addSubview(tableView)
+
     }
      
     override func viewWillAppear(_ animated: Bool) {
@@ -55,10 +54,13 @@ class HomeViewController: BaseViewController {
     
     override func configure() {
         view.addSubview(tableView)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
+        
+        let plus = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
+        let backUp = UIBarButtonItem(image: UIImage(systemName: "archivebox.fill"), style: .plain, target: self, action: #selector(goBackUpPage))
        let filterButton = UIBarButtonItem(title: "필터", style: .plain, target: self, action: #selector(filterButtonClicked))
         let sortedButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortButtonClicked))
         navigationItem.leftBarButtonItems = [filterButton, sortedButton]
+        navigationItem.rightBarButtonItems = [plus, backUp]
     }
     
     override func setConstraints() {
@@ -67,19 +69,23 @@ class HomeViewController: BaseViewController {
         }
     }
     
+   //MARK: - 버튼
+   
+    @objc func goBackUpPage() {
+        let vc = BackupViewController()
+        transition(vc, transitionStyle: .push)
+    }
+    
     @objc func plusButtonClicked() {
         let vc = WriteViewController()
         vc.transitionFetchfunction = fetchRealm
-        transition(vc, transitionStyle: .presintNavigation) // 편하다
+        transition(vc, transitionStyle: .presentNavigation)
     }
     
-
 //realm filter query, NSPredicate
-    
 @objc func sortButtonClicked() {
    tasks = localRealm.objects(UserDiary_re.self).sorted(byKeyPath: "regdate", ascending: true)
 }
-    
     // ==이 아니라 몽고의 조건문 규칙을 써줘야함
     // 띄어쓰기하면 ''로 묶어줘야 찾을 수 있음
     @objc func filterButtonClicked() {
@@ -88,6 +94,7 @@ class HomeViewController: BaseViewController {
     }
 }
 
+//MARK: - 테이블뷰 extension
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

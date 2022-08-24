@@ -109,7 +109,7 @@ class WriteViewController: BaseViewController {
     @objc func selectImageButtonClicked() {
         let vc = ImageSearchViewController()
         vc.delegate = self // 값전달의 인스턴스가 같아야하기때문에
-        transition(vc, transitionStyle: .presintNavigation)
+        transition(vc, transitionStyle: .presentNavigation)
     }
     
     //MARK: - 키보드 메서드
