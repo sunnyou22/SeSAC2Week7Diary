@@ -8,11 +8,16 @@
 import UIKit
 import RealmSwift //Realm 1.
 
+protocol SelectImageDelegate {
+    func sendImageData(image: UIImage)
+}
+
 class WriteViewController: BaseViewController {
     
     let mainView = WriteView()
     let localRealm = try! Realm() //Realm 2. Realm 테이블에 데이터를 CRUD할 때, Realm 테이블 경로에 접근
     var keyHeight: CGFloat = 0 // 키보드 높이 지정 변수?
+    var transitionFetchfunction: (() -> Void)?
     
     override func loadView() {
         self.view = mainView
@@ -27,15 +32,17 @@ class WriteViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "저장", style: .plain, target: self, action: #selector(saveButton))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancleButton))
-        
         addKeyboardNotifications()
     }
     
     override func configure() {
         mainView.searchImageButton.addTarget(self, action: #selector(selectImageButtonClicked), for: .touchUpInside)
         mainView.sampleButton.addTarget(self, action: #selector(sampleButtonClicked), for: .touchUpInside)
+        
+        let saveButton = UIBarButtonItem(title: "저장", style: .plain, target: self, action: #selector(saveButtonClicked))
+        navigationItem.leftBarButtonItem = saveButton
+        let closeButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancleButtonClicked))
+        navigationItem.rightBarButtonItem = closeButton
     }
     
     //Realm Create Sample
@@ -50,7 +57,7 @@ class WriteViewController: BaseViewController {
         }
     }
     
-    @objc func cancleButton() {
+    @objc func cancleButtonClicked() {
        
         let alert = UIAlertController(title: "메인화면으로 가기", message: "본 일기내용은 저장되지 않습니다. 정말 메인화면으로 가시겠습니까?", preferredStyle: .alert)
         let ok = UIAlertAction(title: "네", style: .default) { _ in
@@ -64,23 +71,45 @@ class WriteViewController: BaseViewController {
         present(alert, animated: true)
     }
     
-    @objc func saveButton() {
-        let task = UserDiary_re(diaryTitle: "선우의 일기", diaryContent: "일기 테스트 내용", diaryDate: Date(), regdate: Date(), photo: nil)
-        try! localRealm.write {
-            localRealm.add(task) //Create
-            
-            task.diaryContent = mainView.contentTextView.text
-            task.diaryTitle = mainView.titleTextField.text!
-            self.dismiss(animated: true)
-            print("Realm Succeed")
+    //Realm + 이미지 도큐먼트 저장
+    @objc func saveButtonClicked() {
+        
+        guard let title = mainView.titleTextField.text else {
+            showAlertMessage(title: "제목을 입력해주세요", button: "확인")
+            return
+            }
+        
+        let task = UserDiary_re(diaryTitle: title, diaryContent: mainView.contentTextView.text!, diaryDate: Date(), regdate: Date(), photo: nil) // 데이터 가져와서
+        
+        do {
+            try localRealm.write({
+                localRealm.add(task) // 램에 저장
+            })
+        } catch let error {
+            print(error)
         }
+        
+        if let image = mainView.userImageView.image {
+            saveImageToDocument(fileName: "\(task.objectId).jpg", image: image)
+        
+//        try! localRealm.write {
+//            localRealm.add(task) //Create
+//
+//            task.diaryContent = mainView.contentTextView.text
+//            task.diaryTitle = mainView.titleTextField.text!
+            
+            print("Realm Succeed")
+        } else {
+            print("이미지 없어용")
+        }
+        transitionFetchfunction!()
+        self.dismiss(animated: true)
     }
     
     @objc func selectImageButtonClicked() {
         let vc = ImageSearchViewController()
-        let nav = UINavigationController(rootViewController: vc)
-        
-        transition(nav)
+        vc.delegate = self // 값전달의 인스턴스가 같아야하기때문에
+        transition(vc, transitionStyle: .presintNavigation)
     }
     
     //MARK: - 키보드 메서드
@@ -119,6 +148,14 @@ class WriteViewController: BaseViewController {
         super.viewDidDisappear(animated)
         
         removeKeyboardNotifications()
+    }
+}
+
+extension WriteViewController: SelectImageDelegate {
+  
+    func sendImageData(image: UIImage) {
+        // 전달받은 이미지를 보여줘
+        mainView.userImageView.image = image
     }
 }
 

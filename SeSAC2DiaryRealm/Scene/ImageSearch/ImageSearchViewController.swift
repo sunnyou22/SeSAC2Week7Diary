@@ -9,9 +9,12 @@ import UIKit
 
 class ImageSearchViewController: BaseViewController {
     
+    var delegate: SelectImageDelegate? // 값전달
+    var selectImage: UIImage? //1.
     //    var perPageImageCount = 10
     var mainView = ImageSearchView()
     var imageURLList: [URL] = []
+    var selectIndexPath: IndexPath? // 선택한 이미지 보더주기 위한 프로퍼티
     
     override func loadView() {
         self.view = mainView
@@ -26,12 +29,14 @@ class ImageSearchViewController: BaseViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "사진선택", style: .plain, target: self, action: #selector(selectPhoto))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancleButton))
+        let selectButton = UIBarButtonItem(title: "사진선택", style: .plain, target: self, action: #selector(selectPhoto))
+        navigationItem.leftBarButtonItem = selectButton
+        let cancleButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancleButtonClicked))
+        navigationItem.rightBarButtonItem = cancleButton
     }
     
-    @objc func cancleButton() {
-       
+    @objc func cancleButtonClicked() {
+        
         let alert = UIAlertController(title: "메인화면으로 가기", message: "본 일기내용은 저장되지 않습니다. 정말 메인화면으로 가시겠습니까?", preferredStyle: .alert)
         let ok = UIAlertAction(title: "네", style: .default) { _ in
             self.dismiss(animated: true)
@@ -45,11 +50,17 @@ class ImageSearchViewController: BaseViewController {
     }
     
     @objc func selectPhoto() {
+        guard let selectImage = selectImage else {
+            showAlertMessage(title: "사진을 선택해주세요", button: "확인")
+            return
+        }
         
+        delegate?.sendImageData(image: selectImage) // 이미지 전달
+        dismiss(animated: true)
     }
     
     override func configure() {
-        mainView.collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.reusableIdentifier)
+        mainView.collectionView.register(ImageSearchCollectionViewCell.self, forCellWithReuseIdentifier: ImageSearchCollectionViewCell.reusableIdentifier)
         
         mainView.searchBar.searchTextField.addTarget(self, action: #selector(doKeyboardDown), for: .editingDidEndOnExit)
         
@@ -57,13 +68,13 @@ class ImageSearchViewController: BaseViewController {
         mainView.collectionView.delegate = self
         mainView.collectionView.dataSource = self
     }
- 
+    
     @objc
     func doKeyboardDown() {
         mainView.searchBar.resignFirstResponder()
         UnsplashAPIManager.shared.callRequst(page: 1, query: mainView.searchBar.text!) { json in
             UnsplashAPIManager.shared.requestUnsplashImage(json: json) { imageList in
-                    
+                
                 self.imageURLList = imageList
             }
         }
@@ -90,7 +101,7 @@ extension ImageSearchViewController: UICollectionViewDelegate, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomCollectionViewCell.reusableIdentifier, for: indexPath) as? CustomCollectionViewCell else { return UICollectionViewCell()}
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageSearchCollectionViewCell.reusableIdentifier, for: indexPath) as? ImageSearchCollectionViewCell else { return UICollectionViewCell()}
         let dataList = imageURLList.map { url in
             try! Data(contentsOf: url)
         }
@@ -104,6 +115,28 @@ extension ImageSearchViewController: UICollectionViewDelegate, UICollectionViewD
         
         print(imageURLList)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //선택된 셀을 가져옴 wow tag를 이용하는 것도 생각해보기(int로 지정될거임)
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ImageSearchCollectionViewCell else { return }
+        
+        //데이터에 인덱스 넣어주기
+        selectIndexPath = indexPath
+        
+        //화면에 보여주기
+        cell.layer.borderWidth = CGFloat(selectIndexPath == indexPath ? imageURLList.count : 0)
+        cell.layer.borderColor = selectIndexPath == indexPath ? Constants.BaseColor.point.cgColor : nil
+        
+        selectImage = cell.imageView.image
+        
+        collectionView.reloadData()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        selectIndexPath = nil
+        selectImage = nil
+        collectionView.reloadData()
     }
 }
 

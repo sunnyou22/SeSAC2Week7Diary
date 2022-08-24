@@ -45,6 +45,8 @@ class HomeViewController: BaseViewController {
         
         //Realm 3. Realm 데이터를 정렬해 tasks 에 담기
         fetchRealm()
+//
+//        tableView.reloadData()
     }
     
     func fetchRealm() {
@@ -67,9 +69,8 @@ class HomeViewController: BaseViewController {
     
     @objc func plusButtonClicked() {
         let vc = WriteViewController()
-        let nav = UINavigationController(rootViewController: vc)
-        nav.modalPresentationStyle = .fullScreen
-        present(nav, animated: true)
+        vc.transitionFetchfunction = fetchRealm
+        transition(vc, transitionStyle: .presintNavigation) // 편하다
     }
     
 
@@ -90,13 +91,22 @@ class HomeViewController: BaseViewController {
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(tasks.count)
         return tasks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? HomeTableViewCell else { return UITableViewCell() }
+        if indexPath.row >= 0 {
+        //이미지 화면에 반영하기
+        cell.diaryImageView.image = loadImageFromDocument(fileName: "\(tasks[indexPath.row].objectId).jpg")
         cell.setData(data: tasks[indexPath.row])
         return cell
+        } else {
+            print("셀이 없어")
+            return UITableViewCell()
+        }
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -108,9 +118,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             let item = tasks?[indexPath.row]
             try! localRealm.write({
                 localRealm.delete(item!)
+                removeImageFromDocument(fileName: "\(tasks[indexPath.row].objectId).jpg")
             })
         }
-        tableView.reloadData()
+        fetchRealm()
     }
     
     //뷰안에 버튼이 들어가는 식이라고 했나?
