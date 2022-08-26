@@ -8,10 +8,20 @@
 import UIKit
 import SnapKit
 import RealmSwift //Realm 1. import
+import FSCalendar
 
 class HomeViewController: BaseViewController {
     
     let repository = UserDiaryRepository() // 위에꺼대신 쓰기
+    
+    lazy var calendar: FSCalendar = { //딜리게이트 등때문에 lazy로 함
+        let view = FSCalendar()
+        view.delegate = self
+        view.dataSource = self
+        view.backgroundColor = .white
+        
+        return view
+    }()
     
     lazy var tableView: UITableView = { //초기화 이후에 실행될 수 있다는 lazy 이렇게 옮기는게 답은 아님
         let view = UITableView()
@@ -20,6 +30,12 @@ class HomeViewController: BaseViewController {
         view.dataSource = self
         view.register(HomeTableViewCell.self, forCellReuseIdentifier: "cell")
         return view
+    }()
+    
+    let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyMMdd"
+        return formatter
     }()
     
     var tasks: Results<UserDiary_re>! {
@@ -56,6 +72,7 @@ class HomeViewController: BaseViewController {
     
     override func configure() {
         view.addSubview(tableView)
+        view.addSubview(calendar)
         
         let plus = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
         let backUp = UIBarButtonItem(image: UIImage(systemName: "archivebox.fill"), style: .plain, target: self, action: #selector(goBackUpPage))
@@ -67,7 +84,12 @@ class HomeViewController: BaseViewController {
     
     override func setConstraints() {
         tableView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(300)
+        }
+        calendar.snp.makeConstraints { make in
+            make.leading.trailing.top.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(300)
         }
     }
     
@@ -174,3 +196,36 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     //
     //    }
 }
+
+extension HomeViewController: FSCalendarDelegate, FSCalendarDataSource {
+    
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+        return repository.fetchDate(date: date).count
+    }
+    
+//    func calendar(_ calendar: FSCalendar, titleFor date: Date) -> String? {
+//        return "새싹"
+//    }
+    
+//    func calendar(_ calendar: FSCalendar, imageFor date: Date) -> UIImage? {
+//        return UIImage(systemName: "star.fill")
+//    }
+    
+//    //캘린더도 컬렉션뷰셀임 그래서 크기를 변경할 수 있음
+//    func calendar(_ calendar: FSCalendar, cellFor date: Date, at position: FSCalendarMonthPosition) -> FSCalendarCell {
+//        <#code#>
+//    }
+
+    //date: yyyyMMdd hh:mm:ss까지 맞아야 가져와줌 -> dateFormatter로 매칭하기 쉬운 형태로 바꿔줌
+    func calendar(_ calendar: FSCalendar, subtitleFor date: Date) -> String? {
+        return formatter.string(from: date) == "220907" ? "오프라인 모임" : nil
+    }
+
+    // 날짜 기준으로 필터를 해서 3개만 보여주기
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        tasks = repository.fetchDate(date: date)
+        tableView.reloadData()
+    }
+}
+
+// 캘린더 쓰고 나니까 일기 삭제하면 오류가 나요 -> 현재 데이터들이 꼬여있음

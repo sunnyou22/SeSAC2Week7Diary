@@ -14,17 +14,23 @@ protocol UserDiaryRepositoryType {
     func fetch() -> Results<UserDiary_re>
     func fetchSort(_ sort: String) -> Results<UserDiary_re>
     func fetchFilter() -> Results<UserDiary_re>
+    func fetchDate(date: Date) -> Results<UserDiary_re>
     func updateFavortie(item: UserDiary_re)
     func deleteRecord(item: UserDiary_re)
-    func addItem(item: UserDiary_re)
+//    func addItem(item: UserDiary_re)
 }
 
 //램에 대한 코드 모으기
 //함수 매개변수를 이후 만들어 재사용성 높이기
 class UserDiaryRepository: UserDiaryRepositoryType {
-    func addItem(item: UserDiary_re) {
-        <#code#>
+    
+    func fetchDate(date: Date) -> Results<UserDiary_re> {
+        return localRealm.objects(UserDiary_re.self).filter("diaryDate >= %@ AND diaryDate < %@", date, Date(timeInterval: 86400, since: date)) //NSPredicate 애플이 만들어준 Filter
     }
+    
+//    func addItem(item: UserDiary_re) {
+//        <#code#>
+//    }
     
     
     let localRealm = try! Realm()
@@ -58,15 +64,13 @@ class UserDiaryRepository: UserDiaryRepositoryType {
     }
     
     func deleteRecord(item: UserDiary_re) {
-        
-        
         try! localRealm.write({
             localRealm.delete(item)
         })
         
         removeImageFromDocument(fileName: "\(item.objectId).jpg")
     }
-    
+      
     func removeImageFromDocument(fileName: String) {
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return } // 내 앱에 해당되는 도큐먼트 폴더가 있늬?
         let fileURL = documentDirectory.appendingPathComponent(fileName)
