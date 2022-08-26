@@ -43,9 +43,11 @@
 		901C30A328B4FB6F006F684E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 901C30A228B4FB6F006F684E /* Alamofire */; };
 		901C30A628B4FB92006F684E /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 901C30A528B4FB92006F684E /* SwiftyJSON */; };
 		901C30A828B4FCB4006F684E /* UIViewCutom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901C30A728B4FCB4006F684E /* UIViewCutom.swift */; };
+		90365C1E28B7016C008CB614 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = 90365C1D28B7016C008CB614 /* Zip */; };
 		903F765628B5ACA10048D3C6 /* APIKEY.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903F765528B5ACA10048D3C6 /* APIKEY.swift */; };
 		905AE4AA28B45B5900196BAB /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 905AE4A928B45B5900196BAB /* Realm */; };
 		905AE4AC28B45B5900196BAB /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 905AE4AB28B45B5900196BAB /* RealmSwift */; };
+		9061D93D28B8558F00329122 /* UserDiaryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9061D93C28B8558F00329122 /* UserDiaryRepository.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +87,7 @@
 		901C309928B4F935006F684E /* URL+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
 		901C30A728B4FCB4006F684E /* UIViewCutom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewCutom.swift; sourceTree = "<group>"; };
 		903F765528B5ACA10048D3C6 /* APIKEY.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
+		9061D93C28B8558F00329122 /* UserDiaryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDiaryRepository.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90365C1E28B7016C008CB614 /* Zip in Frameworks */,
 				901C30A628B4FB92006F684E /* SwiftyJSON in Frameworks */,
 				901C30A328B4FB6F006F684E /* Alamofire in Frameworks */,
 				905AE4AC28B45B5900196BAB /* RealmSwift in Frameworks */,
@@ -107,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				04F868CF28B319E000D1DA25 /* RealmModel.swift */,
+				9061D93C28B8558F00329122 /* UserDiaryRepository.swift */,
 			);
 			path = Realm;
 			sourceTree = "<group>";
@@ -279,6 +284,7 @@
 				905AE4AB28B45B5900196BAB /* RealmSwift */,
 				901C30A228B4FB6F006F684E /* Alamofire */,
 				901C30A528B4FB92006F684E /* SwiftyJSON */,
+				90365C1D28B7016C008CB614 /* Zip */,
 			);
 			productName = SeSAC2DiaryRealm;
 			productReference = 04FBA0BF28B2645A00BFDC17 /* SeSAC2DiaryRealm.app */;
@@ -313,6 +319,7 @@
 				905AE4A828B45B5900196BAB /* XCRemoteSwiftPackageReference "realm-swift" */,
 				901C30A128B4FB6F006F684E /* XCRemoteSwiftPackageReference "Alamofire" */,
 				901C30A428B4FB92006F684E /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				90365C1C28B7016C008CB614 /* XCRemoteSwiftPackageReference "Zip" */,
 			);
 			productRefGroup = 04FBA0C028B2645A00BFDC17 /* Products */;
 			projectDirPath = "";
@@ -353,6 +360,7 @@
 				04FBA0F928B26D5600BFDC17 /* ImageSearchViewController.swift in Sources */,
 				04FBA0EC28B26A3800BFDC17 /* WriteView.swift in Sources */,
 				901C309D28B4F935006F684E /* APIManager.swift in Sources */,
+				9061D93D28B8558F00329122 /* UserDiaryRepository.swift in Sources */,
 				04FBA0D928B2650B00BFDC17 /* BaseViewController.swift in Sources */,
 				04FBA0DC28B2655200BFDC17 /* BaseView.swift in Sources */,
 				9008E44128B63BAC005852B4 /* BackupTableViewCell.swift in Sources */,
@@ -518,6 +526,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6H94XW3M7L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SeSAC2DiaryRealm/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -530,7 +539,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sesac.SeSAC2DiaryRealm;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sesac.SeSAC2DiaryRealm-re";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -545,6 +554,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6H94XW3M7L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SeSAC2DiaryRealm/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -557,7 +567,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sesac.SeSAC2DiaryRealm;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sesac.SeSAC2DiaryRealm-re";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -613,6 +623,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		90365C1C28B7016C008CB614 /* XCRemoteSwiftPackageReference "Zip" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marmelroy/Zip.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		905AE4A828B45B5900196BAB /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
@@ -638,6 +656,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 901C30A428B4FB92006F684E /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
 			productName = SwiftyJSON;
+		};
+		90365C1D28B7016C008CB614 /* Zip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90365C1C28B7016C008CB614 /* XCRemoteSwiftPackageReference "Zip" */;
+			productName = Zip;
 		};
 		905AE4A928B45B5900196BAB /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;

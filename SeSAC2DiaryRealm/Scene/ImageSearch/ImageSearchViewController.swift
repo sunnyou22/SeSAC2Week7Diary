@@ -113,6 +113,13 @@ extension ImageSearchViewController: UICollectionViewDelegate, UICollectionViewD
             return cell
         }
         
+        cell.layer.borderWidth = CGFloat(selectIndexPath == indexPath ? imageURLList.count : 0)
+        cell.layer.borderColor = selectIndexPath == indexPath ? Constants.BaseColor.point.cgColor : nil
+        
+//        selectImage = cell.imageView.image
+//
+//        collectionView.reloadData()
+        
         print(imageURLList)
         return cell
     }
@@ -125,11 +132,11 @@ extension ImageSearchViewController: UICollectionViewDelegate, UICollectionViewD
         selectIndexPath = indexPath
         
         //화면에 보여주기
-        cell.layer.borderWidth = CGFloat(selectIndexPath == indexPath ? imageURLList.count : 0)
-        cell.layer.borderColor = selectIndexPath == indexPath ? Constants.BaseColor.point.cgColor : nil
-        
+//        cell.layer.borderWidth = CGFloat(selectIndexPath == indexPath ? imageURLList.count : 0)
+//        cell.layer.borderColor = selectIndexPath == indexPath ? Constants.BaseColor.point.cgColor : nil
+//
         selectImage = cell.imageView.image
-        
+
         collectionView.reloadData()
     }
     
