@@ -11,7 +11,6 @@ import RealmSwift //Realm 1. import
 
 class HomeViewController: BaseViewController {
     
-//    let localRealm = try! Realm() // Realm 2.
     let repository = UserDiaryRepository() // 위에꺼대신 쓰기
     
     lazy var tableView: UITableView = { //초기화 이후에 실행될 수 있다는 lazy 이렇게 옮기는게 답은 아님
@@ -50,7 +49,9 @@ class HomeViewController: BaseViewController {
     }
     
     func fetchRealm() {
-        tasks = localRealm.objects(UserDiary_re.self).sorted(byKeyPath: "diaryTitle", ascending: true)
+        
+        // Realm3. 데이터를 정렬해 tasks에 담기
+        tasks = repository.fetch()
     }
     
     override func configure() {
@@ -85,13 +86,14 @@ class HomeViewController: BaseViewController {
     
     //realm filter query, NSPredicate
     @objc func sortButtonClicked() {
-        tasks = localRealm.objects(UserDiary_re.self).sorted(byKeyPath: "regdate", ascending: true)
+        tasks = repository.fetchSort("regdate")
     }
+    
     // ==이 아니라 몽고의 조건문 규칙을 써줘야함
     // 띄어쓰기하면 ''로 묶어줘야 찾을 수 있음
     @objc func filterButtonClicked() {
         //        tasks = localRealm.objects(UserDiary.self).sorted(byKeyPath: "diaryTitle = '오늘의 일기171'")
-        tasks = localRealm.objects(UserDiary_re.self).sorted(byKeyPath: "diaryTitle CONTAINS[c] '일기'") // [c]를 쓰면 대소문자랑 상관없이 찾아줌
+        tasks = repository.fetchFilter()
     }
 }
 
@@ -120,16 +122,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
-        let item = tasks?[indexPath.row]
-        removeImageFromDocument(fileName: "\(item!.objectId).jpg")
         if editingStyle == .delete {
-
-                try! localRealm.write({
-                localRealm.delete(item!)
-                //tasks[indexPath.row].objectId -> item
-            })
-//            
-//            fetchRealm()
+            repository.deleteRecord(item: self.tasks[indexPath.row])
         }
     }
     
@@ -141,20 +135,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             print("favorite ButtonClicked")
             
             //real data update
-            try! self.localRealm.write({
-                
-                //하나의 레코드에서 특정 컬럼 하나만 변경
-                //                self.tasks[indexPath.row].favorite = !self.tasks[indexPath.row].favorite
-                
-                //하나의 테이블에 특정 컬럼 전체 값을 변경
-                //                self.tasks.setValue(true, forKey: "favorite")
-                
-                //하나의 레코드에서 여러 컬럼들이 변경
-//                                self.localRealm.create(UserDiary_re.self, value: ["objectId": self.tasks[indexPath.row].objectId, "diaryContent": "변경 테스트", "diaryTitle": "제목임"], update: .modified)
-                
-                
-                print("Realm Update Succeed, reloadRows 필요")
-            })
+            self.repository.updateFavortie(item: self.tasks[indexPath.row])
             
             // 1.스와이프한 셀 하나만 reloadRows 코드 구현 -> 상대적으로 효율적
             //2, 데이터가 변경됐으니 다시 Realm에서 데이터 가져오기 => didset 일관적 형태로 갱신
