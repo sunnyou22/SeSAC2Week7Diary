@@ -13,7 +13,7 @@ import UIKit
 protocol UserDiaryRepositoryType {
     func fetch() -> Results<UserDiary_re>
     func fetchSort(_ sort: String) -> Results<UserDiary_re>
-    func fetchFilter() -> Results<UserDiary_re>
+    func fetchFilterKeyword(_ word: String) -> Results<UserDiary_re>
     func fetchDate(date: Date) -> Results<UserDiary_re>
     func updateFavortie(item: UserDiary_re)
     func deleteRecord(item: UserDiary_re)
@@ -23,7 +23,7 @@ protocol UserDiaryRepositoryType {
 //램에 대한 코드 모으기
 //함수 매개변수를 이후 만들어 재사용성 높이기
 class UserDiaryRepository: UserDiaryRepositoryType {
-    
+  
     func fetchDate(date: Date) -> Results<UserDiary_re> {
         return localRealm.objects(UserDiary_re.self).filter("diaryDate >= %@ AND diaryDate < %@", date, Date(timeInterval: 86400, since: date)) //NSPredicate 애플이 만들어준 Filter
     }
@@ -50,8 +50,8 @@ class UserDiaryRepository: UserDiaryRepositoryType {
         return localRealm.objects(UserDiary_re.self).sorted(byKeyPath: sort, ascending: true)
     }
     
-    func fetchFilter() -> Results<UserDiary_re> {
-        return localRealm.objects(UserDiary_re.self).filter("diaryTitle CONTAINS[c] '일기'") // [c]를 쓰면 대소문자랑 상관없이 찾아줌
+    func fetchFilterKeyword(_ word: String) -> Results<UserDiary_re> {
+        return localRealm.objects(UserDiary_re.self).filter("diaryTitle CONTAINS[c] '\(word)'") // [c]를 쓰면 대소문자랑 상관없이 찾아줌
     }
     
     //어차피 tableView 메서드 안에서 쓰니까

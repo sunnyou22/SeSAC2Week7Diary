@@ -85,7 +85,7 @@ class HomeViewController: BaseViewController {
     override func setConstraints() {
         tableView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.top.equalTo(300)
+            make.top.equalTo(calendar.snp.bottom).offset(0)
         }
         calendar.snp.makeConstraints { make in
             make.leading.trailing.top.equalTo(view.safeAreaLayoutGuide)
@@ -116,7 +116,7 @@ class HomeViewController: BaseViewController {
     // 띄어쓰기하면 ''로 묶어줘야 찾을 수 있음
     @objc func filterButtonClicked() {
         //        tasks = localRealm.objects(UserDiary.self).sorted(byKeyPath: "diaryTitle = '오늘의 일기171'")
-        tasks = repository.fetchFilter()
+        tasks = repository.fetchFilterKeyword("일기")
     }
 }
 

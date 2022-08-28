@@ -11,6 +11,9 @@ import SnapKit
 
 class SearchViewController: BaseViewController {
     
+    let repository = UserDiaryRepository()
+    var tasks: Results<UserDiary_re>!
+    
    lazy var searchBar: UISearchBar = {
        let view = UISearchBar()
         return view
@@ -21,7 +24,7 @@ class SearchViewController: BaseViewController {
         view.rowHeight = 100
         view.delegate = self
         view.dataSource = self
-        view.register(SearchTablaViewCell.self, forCellReuseIdentifier: SearchTablaViewCell.reuseIdentifier)
+        view.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.reuseIdentifier)
         
         return view
     }()
@@ -32,7 +35,14 @@ class SearchViewController: BaseViewController {
     }
     
     override func configure() {
+        searchBar.searchTextField.addTarget(self, action: #selector(doKeyboardDown), for: .editingDidEndOnExit)
         [searchBar, tableView].forEach { view.addSubview($0) }
+    }
+    
+    @objc func doKeyboardDown() {
+        searchBar.resignFirstResponder()
+        tableView.reloadData()
+        print("키보드 내려감")
     }
     
     override func setConstraints() {
@@ -45,18 +55,37 @@ class SearchViewController: BaseViewController {
             make.bottom.equalToSuperview().offset(0)
         }
     }
+    
+    func fetchRealm() {
+       tasks = repository.fetch()
+    }
 }
 
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
+        
+        guard let searchBarText = searchBar.searchTextField.text, !searchBarText.isEmpty else {
+            print("=====> 검색창이 비어있습니다(cell 갯수)")
+            return 0
+        }
+        return repository.fetchFilterKeyword(searchBarText).count
+        print(repository.fetchFilterKeyword(searchBarText).count)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchTablaViewCell.reuseIdentifier, for: indexPath) as? SearchTablaViewCell else { return UITableViewCell() }
-        cell.backgroundColor = .brown
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.reuseIdentifier, for: indexPath) as? HomeTableViewCell else { return UITableViewCell() }
+        
+        guard let searchBarText = searchBar.searchTextField.text, !searchBarText.isEmpty else {
+            print("=====> 검색창이 비어있습니다(cellForRowAt")
+            return UITableViewCell()
+        }
+        
+        tasks = repository.fetchFilterKeyword(searchBarText)
+//        tableView.reloadData()
+        cell.setData(data: tasks[indexPath.row])
+        
+        
         return cell
     }
-    
-    
 }
