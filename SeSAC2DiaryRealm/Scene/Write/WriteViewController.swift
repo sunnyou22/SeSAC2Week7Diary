@@ -13,9 +13,8 @@ protocol SelectImageDelegate {
 }
 
 final class WriteViewController: BaseViewController { //더이상 상속하지 않는 클래스에 final을 붙임
-    
+    let repository = UserDiaryRepository()
     let mainView = WriteView()
-    let localRealm = try! Realm() //Realm 2. Realm 테이블에 데이터를 CRUD할 때, Realm 테이블 경로에 접근
     var keyHeight: CGFloat = 0 // 키보드 높이 지정 변수?
     var transitionFetchfunction: (() -> Void)?
     
@@ -26,7 +25,7 @@ final class WriteViewController: BaseViewController { //더이상 상속하지 �
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        print("Realm is located at:", localRealm.configuration.fileURL!)
+        print("Realm is located at:", repository.localRealm.configuration.fileURL!)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,11 +49,8 @@ final class WriteViewController: BaseViewController { //더이상 상속하지 �
         
         let task = UserDiary_re(diaryTitle: "가오늘의 일기\(Int.random(in: 1...1000))", diaryContent: "일기 테스트 내용", diaryDate: Date(), regdate: Date(), photo: nil) // => Record
         
-        try! localRealm.write {
-            localRealm.add(task) //Create
-            print("Realm Succeed")
-            dismiss(animated: true)
-        }
+        repository.addItem(item: task)
+        dismiss(animated: true)
     }
     
     @objc func cancleButtonClicked() {
@@ -81,24 +77,12 @@ final class WriteViewController: BaseViewController { //더이상 상속하지 �
         
         let task = UserDiary_re(diaryTitle: title, diaryContent: mainView.contentTextView.text!, diaryDate: Date(), regdate: Date(), photo: nil) // 데이터 가져와서
         
-        do {
-            try localRealm.write({
-                localRealm.add(task) // 램에 저장
-            })
-        } catch let error {
-            print(error)
-        }
+        repository.addItem(item: task)
         
         if let image = mainView.userImageView.image {
             saveImageToDocument(fileName: "\(task.objectId).jpg", image: image)
         
-//        try! localRealm.write {
-//            localRealm.add(task) //Create
-//
-//            task.diaryContent = mainView.contentTextView.text
-//            task.diaryTitle = mainView.titleTextField.text!
-            
-            print("Realm Succeed")
+            print("====> saveImageToDocument => Realm Succeed")
         } else {
             print("이미지 없어용")
         }

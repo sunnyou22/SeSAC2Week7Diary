@@ -45,6 +45,8 @@
 		901C30A828B4FCB4006F684E /* UIViewCutom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901C30A728B4FCB4006F684E /* UIViewCutom.swift */; };
 		90365C1E28B7016C008CB614 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = 90365C1D28B7016C008CB614 /* Zip */; };
 		903F765628B5ACA10048D3C6 /* APIKEY.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903F765528B5ACA10048D3C6 /* APIKEY.swift */; };
+		90477A9E28BB734900C22C8D /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90477A9D28BB734900C22C8D /* SearchViewController.swift */; };
+		90477AA028BB74AF00C22C8D /* SearchTablaViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90477A9F28BB74AF00C22C8D /* SearchTablaViewCell.swift */; };
 		905AE4AA28B45B5900196BAB /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 905AE4A928B45B5900196BAB /* Realm */; };
 		905AE4AC28B45B5900196BAB /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 905AE4AB28B45B5900196BAB /* RealmSwift */; };
 		9061D93D28B8558F00329122 /* UserDiaryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9061D93C28B8558F00329122 /* UserDiaryRepository.swift */; };
@@ -88,6 +90,8 @@
 		901C309928B4F935006F684E /* URL+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
 		901C30A728B4FCB4006F684E /* UIViewCutom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewCutom.swift; sourceTree = "<group>"; };
 		903F765528B5ACA10048D3C6 /* APIKEY.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
+		90477A9D28BB734900C22C8D /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		90477A9F28BB74AF00C22C8D /* SearchTablaViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTablaViewCell.swift; sourceTree = "<group>"; };
 		9061D93C28B8558F00329122 /* UserDiaryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDiaryRepository.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -206,8 +210,9 @@
 		04FBA0E628B269E200BFDC17 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
-				9008E43D28B63B48005852B4 /* Backup */,
 				04F868D128B32A8800D1DA25 /* Home */,
+				90477A9C28BB731B00C22C8D /* Search */,
+				9008E43D28B63B48005852B4 /* Backup */,
 				04FBA0E828B26A0A00BFDC17 /* ImageSearch */,
 				04FBA0E728B269EA00BFDC17 /* Write */,
 			);
@@ -262,6 +267,15 @@
 				901C309928B4F935006F684E /* URL+Extension.swift */,
 			);
 			path = Constant;
+			sourceTree = "<group>";
+		};
+		90477A9C28BB731B00C22C8D /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				90477A9D28BB734900C22C8D /* SearchViewController.swift */,
+				90477A9F28BB74AF00C22C8D /* SearchTablaViewCell.swift */,
+			);
+			path = Search;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -364,6 +378,7 @@
 				04FBA0F928B26D5600BFDC17 /* ImageSearchViewController.swift in Sources */,
 				04FBA0EC28B26A3800BFDC17 /* WriteView.swift in Sources */,
 				901C309D28B4F935006F684E /* APIManager.swift in Sources */,
+				90477A9E28BB734900C22C8D /* SearchViewController.swift in Sources */,
 				9061D93D28B8558F00329122 /* UserDiaryRepository.swift in Sources */,
 				04FBA0D928B2650B00BFDC17 /* BaseViewController.swift in Sources */,
 				04FBA0DC28B2655200BFDC17 /* BaseView.swift in Sources */,
@@ -376,6 +391,7 @@
 				04FBA0FB28B26D6000BFDC17 /* ImageSearchView.swift in Sources */,
 				04F868C528B2F57500D1DA25 /* ImageDummyData.swift in Sources */,
 				04F868D828B444FB00D1DA25 /* HomeTableViewCell.swift in Sources */,
+				90477AA028BB74AF00C22C8D /* SearchTablaViewCell.swift in Sources */,
 				901C30A828B4FCB4006F684E /* UIViewCutom.swift in Sources */,
 				04F868D328B32A9800D1DA25 /* HomeViewController.swift in Sources */,
 				04FBA0E228B266F000BFDC17 /* Constants.swift in Sources */,

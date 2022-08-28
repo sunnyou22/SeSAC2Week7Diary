@@ -17,7 +17,7 @@ protocol UserDiaryRepositoryType {
     func fetchDate(date: Date) -> Results<UserDiary_re>
     func updateFavortie(item: UserDiary_re)
     func deleteRecord(item: UserDiary_re)
-//    func addItem(item: UserDiary_re)
+    func addItem(item: UserDiary_re)
 }
 
 //램에 대한 코드 모으기
@@ -28,9 +28,16 @@ class UserDiaryRepository: UserDiaryRepositoryType {
         return localRealm.objects(UserDiary_re.self).filter("diaryDate >= %@ AND diaryDate < %@", date, Date(timeInterval: 86400, since: date)) //NSPredicate 애플이 만들어준 Filter
     }
     
-//    func addItem(item: UserDiary_re) {
-//        <#code#>
-//    }
+    func addItem(item: UserDiary_re) {
+        do {
+            try localRealm.write {
+                localRealm.add(item) // 새로운 칼럼 생성
+                print("Realm Succeed")
+            }
+        } catch {
+            print("Realm Fail")
+        }
+    }
     
     
     let localRealm = try! Realm()

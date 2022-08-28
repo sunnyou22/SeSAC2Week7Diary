@@ -15,10 +15,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
+         
+        let searchViewController = UINavigationController(rootViewController: SearchViewController())
+        let settingViewwController = UINavigationController(rootViewController: BackupViewController())
+        let diaryViewController = UINavigationController(rootViewController: HomeViewController())
         
-        let viewController = HomeViewController()
-        let navigationController = UINavigationController(rootViewController: viewController)
-        window?.rootViewController = navigationController
+        let tabBarController = UITabBarController()
+        tabBarController.setViewControllers([searchViewController, diaryViewController, settingViewwController], animated: true)
+        
+        if let items = tabBarController.tabBar.items {
+            items[0].selectedImage = UIImage(systemName: "gear")
+            items[0].image = UIImage(systemName: "folder")
+            items[0].title = "설정"
+            
+            items[1].selectedImage = UIImage(systemName: "chart.bar.doc.horizontal")
+            items[1].image = UIImage(systemName: "folder")
+            items[1].title = "다이어리"
+            
+            items[2].selectedImage = UIImage(systemName: "magnifyingglass")
+            items[2].image = UIImage(systemName: "folder")
+            items[2].title = "검색"
+            
+        }
+        
+       
+        window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
     }
 
