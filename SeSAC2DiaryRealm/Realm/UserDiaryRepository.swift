@@ -44,7 +44,7 @@ class UserDiaryRepository: UserDiaryRepositoryType {
     }
     
     func fetchFilter() -> Results<UserDiary_re> {
-        return localRealm.objects(UserDiary_re.self).sorted(byKeyPath: "diaryTitle CONTAINS[c] '일기'") // [c]를 쓰면 대소문자랑 상관없이 찾아줌
+        return localRealm.objects(UserDiary_re.self).filter("diaryTitle CONTAINS[c] '일기'") // [c]를 쓰면 대소문자랑 상관없이 찾아줌
     }
     
     //어차피 tableView 메서드 안에서 쓰니까
@@ -64,17 +64,19 @@ class UserDiaryRepository: UserDiaryRepositoryType {
     }
     
     func deleteRecord(item: UserDiary_re) {
-        try! localRealm.write({
-            localRealm.delete(item)
-        })
         
         removeImageFromDocument(fileName: "\(item.objectId).jpg")
+        
+        try! localRealm.write {
+            localRealm.delete(item)
+            print(item)
+        }
     }
-      
+    
     func removeImageFromDocument(fileName: String) {
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return } // 내 앱에 해당되는 도큐먼트 폴더가 있늬?
         let fileURL = documentDirectory.appendingPathComponent(fileName)
-        
+
         do {
             try FileManager.default.removeItem(at: fileURL)
         } catch let error {

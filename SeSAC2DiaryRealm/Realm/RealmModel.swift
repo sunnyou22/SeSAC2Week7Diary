@@ -21,7 +21,6 @@ class UserDiary_re: Object {
     //PK(필수): Int, UUID, ObjectID
     @Persisted(primaryKey: true) var objectId: ObjectId
     
-    
     convenience init(diaryTitle: String, diaryContent: String?, diaryDate: Date, regdate: Date, photo: String?) {
         self.init()
         self.diaryTitle = diaryTitle

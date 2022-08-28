@@ -107,6 +107,7 @@ class HomeViewController: BaseViewController {
     }
     
     //realm filter query, NSPredicate
+
     @objc func sortButtonClicked() {
         tasks = repository.fetchSort("regdate")
     }
@@ -131,9 +132,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? HomeTableViewCell else { return UITableViewCell() }
         
+        let item = tasks[indexPath.row]
+        print(item.objectId)
+        
             //이미지 화면에 반영하기
-            cell.diaryImageView.image = loadImageFromDocument(fileName: "\(tasks[indexPath.row].objectId).jpg")
-            cell.setData(data: tasks[indexPath.row])
+            cell.diaryImageView.image = loadImageFromDocument(fileName: "\(item.objectId).jpg")
+            cell.setData(data: item)
             
         return cell
     }
@@ -143,10 +147,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        let item = tasks[indexPath.row]
         
         if editingStyle == .delete {
             repository.deleteRecord(item: self.tasks[indexPath.row])
         }
+        
+        self.fetchRealm()
     }
     
     //뷰안에 버튼이 들어가는 식이라고 했나?
@@ -200,6 +207,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 extension HomeViewController: FSCalendarDelegate, FSCalendarDataSource {
     
     func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+
         return repository.fetchDate(date: date).count
     }
     

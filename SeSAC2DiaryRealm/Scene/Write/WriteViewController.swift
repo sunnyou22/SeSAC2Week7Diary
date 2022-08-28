@@ -12,7 +12,7 @@ protocol SelectImageDelegate {
     func sendImageData(image: UIImage)
 }
 
-class WriteViewController: BaseViewController {
+final class WriteViewController: BaseViewController { //더이상 상속하지 않는 클래스에 final을 붙임
     
     let mainView = WriteView()
     let localRealm = try! Realm() //Realm 2. Realm 테이블에 데이터를 CRUD할 때, Realm 테이블 경로에 접근
